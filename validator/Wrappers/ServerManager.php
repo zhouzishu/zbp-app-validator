@@ -62,7 +62,7 @@ class ServerManager
         }
         $status = proc_get_status($proc);
         $pid = $status['pid'];
-        Logger::info("Started PHP Server(PID=${pid}) at $listenAddress");
+        Logger::info("Started PHP Server(PID={$pid}) at $listenAddress");
         $this->pid = $pid;
         file_put_contents($this->pidPath, $pid);
         while (true) {

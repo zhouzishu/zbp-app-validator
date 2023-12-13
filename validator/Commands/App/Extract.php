@@ -31,18 +31,20 @@ class Extract extends Command
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $appPath = $input->getArgument("path");
         if (!file_exists($appPath)) {
             Logger::error("$appPath not found or unreadable");
-            return;
+            return 0;
         }
         $appId = ZBPWrapper::installApp($appPath);
         if ($appId == false) {
             Logger::error("Extract $appPath failed");
-            return;
+            return 0;
         }
         Logger::info("Extracted $appId");
+
+        return 0;
     }
 }

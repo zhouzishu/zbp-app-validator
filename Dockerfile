@@ -20,15 +20,15 @@ RUN export NODEJS_HOST=https://nodejs.org/dist/; if [ "x$location" = "xchina" ];
     && LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php \
     && if [ "x$location" = "xchina" ]; then echo "Changed Ubuntu source"; find /etc/apt/sources.list.d/ -type f -name "*.list" -exec  sed  -i.bak -r  's#deb(-src)?\s*http(s)?://ppa.launchpad.net#deb\1 https://launchpad.proxy.ustclug.org#ig' {} \; ;fi \
     && apt-get update \
-    && apt-get -y install nginx php7.4-fpm php7.4-gd php7.4-curl php7.4-mysql php7.4-cli php7.4-xml php7.4-json php7.4-mbstring php7.4-cli php7.4-dev php7.4-sqlite3 php7.4-zip php-pear \
+    && apt-get -y install nginx php8.0-fpm php8.0-gd php8.0-curl php8.0-mysql php8.0-cli php8.0-xml php8.0-json php8.0-mbstring php8.0-cli php8.0-dev php8.0-sqlite3 php8.0-zip php-pear \
     && pecl install uopz \
     && rm -rf /etc/nginx/sites-enabled/default \
     && curl https://getcomposer.org/installer | php -- --filename=composer \
     && chmod a+x composer \
     && mv composer /usr/local/bin/composer \
-    && (echo extension=uopz.so > /etc/php/7.4/mods-available/uopz.ini) \
-    && (echo extension=uopz.so > /etc/php/7.4/fpm/conf.d/uopz.ini) \
-    && (echo extension=uopz.so > /etc/php/7.4/cli/conf.d/uopz.ini) \
+    && (echo extension=uopz.so > /etc/php/8.0/mods-available/uopz.ini) \
+    && (echo extension=uopz.so > /etc/php/8.0/fpm/conf.d/uopz.ini) \
+    && (echo extension=uopz.so > /etc/php/8.0/cli/conf.d/uopz.ini) \
     && rm -rf /tmp/pear \
 # Nodejs
     && apt-get -y install yarn \
@@ -45,7 +45,7 @@ RUN export NODEJS_HOST=https://nodejs.org/dist/; if [ "x$location" = "xchina" ];
     && mkdir /var/run/mysqld \
     && chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
 # Clean rubbish
-    && apt-get -y remove php7.4-dev php-pear \
+    && apt-get -y remove php8.0-dev php-pear \
     && apt-get -y autoremove \
     && apt-get autoclean \
     && apt-get clean \
@@ -70,7 +70,7 @@ RUN fc-cache -fv
 COPY package.json yarn.lock composer.json composer.lock /zbp-app-validator/
 WORKDIR /zbp-app-validator/
 
-RUN if [ "x$location" = "xchina" ]; then composer config -g repo.packagist composer https://packagist.phpcomposer.com; export NPM_CONFIG_REGISTRY=https://registry.npm.taobao.org; export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/; export PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors; export SASS_BINARY_SITE=http://npm.taobao.org/mirrors/node-sass; fi; \
+RUN if [ "x$location" = "xchina" ]; then composer config -g repo.packagist composer https://mirrors.tencent.com/composer/; export NPM_CONFIG_REGISTRY=https://registry.npm.taobao.org; export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/; export PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors; export SASS_BINARY_SITE=http://npm.taobao.org/mirrors/node-sass; fi; \
     yarn && yarn cache clean --force && composer install && composer clearcache
 
 COPY ./ /zbp-app-validator/

@@ -29,10 +29,12 @@ class Enable extends Command
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $appId = $input->getArgument("appId");
         $app = ZBPWrapper::loadApp($appId);
         ZBPWrapper::enablePlugin();
+
+        return 0;
     }
 }

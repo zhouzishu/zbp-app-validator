@@ -34,7 +34,7 @@ class Start extends Command
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         Logger::info('Starting a new check project...');
         TempHelper::createTemp();
@@ -42,5 +42,7 @@ class Start extends Command
         if ($input->getOption('start-server')) {
             ServerManager::start();
         }
+
+        return 0;
     }
 }

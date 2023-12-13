@@ -27,8 +27,10 @@ class Login extends Command
             ->setDescription('Login AppCenter');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         AppCenterWrapper::login();
+
+        return 0;
     }
 }
