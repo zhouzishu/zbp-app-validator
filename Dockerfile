@@ -67,7 +67,7 @@ RUN mkdir /data/certs \
 COPY ./docker-scripts/64-language-selector-prefer.conf /etc/fonts/conf.d/64-language-selector-prefer.conf
 RUN fc-cache -fv
 
-COPY package.json yarn.lock composer.json composer.lock /zbp-app-validator/
+COPY package.json composer.json composer.lock /zbp-app-validator/
 WORKDIR /zbp-app-validator/
 
 RUN if [ "x$location" = "xchina" ]; then composer config -g repo.packagist composer https://mirrors.tencent.com/composer/; export NPM_CONFIG_REGISTRY=https://registry.npm.taobao.org; export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/; export PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors; export SASS_BINARY_SITE=http://npm.taobao.org/mirrors/node-sass; fi; \
