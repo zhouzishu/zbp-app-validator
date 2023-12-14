@@ -4,7 +4,7 @@ ENV NODEJS_VERSION v10.15.0
 ENV DEBIAN_FRONTEND=noninteractive
 
 ARG location
-RUN export NODEJS_HOST=https://nodejs.org/dist/; if [ "x$location" = "xchina" ]; then echo "Changed Ubuntu source"; sed -i 's#http://archive.ubuntu.com#https://mirrors.cloud.tencent.com#g' /etc/apt/sources.list; export NPM_CONFIG_REGISTRY=https://registry.npm.taobao.org; export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/; export PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors; export NODEJS_HOST=https://npm.taobao.org/mirrors/node/; fi; \
+RUN export NODEJS_HOST=https://nodejs.org/dist/; if [ "x$location" = "xchina" ]; then echo "Changed Ubuntu source"; cp /etc/apt/sources.list /etc/apt/sources.list.bak; touch /etc/apt/sources.list; echo 'deb http://mirrors.tencent.com/debian buster main contrib non-free' >> /etc/apt/sources.list; echo 'deb http://mirrors.tencent.com/debian buster-updates main contrib non-free' >> /etc/apt/sources.list; echo 'deb http://mirrors.tencent.com/debian-security buster/updates main' >> /etc/apt/sources.list; echo 'deb-src http://mirrors.tencent.com/debian buster main contrib non-free' >> /etc/apt/sources.list; echo 'deb-src http://mirrors.tencent.com/debian buster-updates main contrib non-free' >> /etc/apt/sources.list; echo 'deb-src http://mirrors.tencent.com/debian-security buster/updates main' >> /etc/apt/sources.list; export NPM_CONFIG_REGISTRY=https://registry.npm.taobao.org; export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/; export PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors; export NODEJS_HOST=https://npm.taobao.org/mirrors/node/; fi; \
     \
     mkdir /data/ /data/logs/ /data/logs/nginx /data/www/ /data/tools /www/ \
     && mkdir /zbp-app-validator \
