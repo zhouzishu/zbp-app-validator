@@ -1,10 +1,10 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 MAINTAINER zsx<zsx@zsxsoft.com>
-ENV NODEJS_VERSION v10.15.0
+ENV NODEJS_VERSION v21.2.0
 ENV DEBIAN_FRONTEND=noninteractive
 
 ARG location
-RUN export NODEJS_HOST=https://nodejs.org/dist/; if [ "x$location" = "xchina" ]; then echo "Changed Ubuntu source"; cp /etc/apt/sources.list /etc/apt/sources.list.bak; touch /etc/apt/sources.list; echo 'deb http://mirrors.tencent.com/debian buster main contrib non-free' >> /etc/apt/sources.list; echo 'deb http://mirrors.tencent.com/debian buster-updates main contrib non-free' >> /etc/apt/sources.list; echo 'deb http://mirrors.tencent.com/debian-security buster/updates main' >> /etc/apt/sources.list; echo 'deb-src http://mirrors.tencent.com/debian buster main contrib non-free' >> /etc/apt/sources.list; echo 'deb-src http://mirrors.tencent.com/debian buster-updates main contrib non-free' >> /etc/apt/sources.list; echo 'deb-src http://mirrors.tencent.com/debian-security buster/updates main' >> /etc/apt/sources.list; export NPM_CONFIG_REGISTRY=https://registry.npm.taobao.org; export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/; export PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors; export NODEJS_HOST=https://npm.taobao.org/mirrors/node/; fi; \
+RUN export NODEJS_HOST=https://nodejs.org/dist/; if [ "x$location" = "xchina" ]; then echo "Changed Ubuntu source"; sed -i 's/http:\/\/archive\.ubuntu\.com\/ubuntu\//http:\/\/mirrors\.tuna\.tsinghua\.edu\.cn\/ubuntu\//g' /etc/apt/sources.list; export NPM_CONFIG_REGISTRY=https://registry.npm.taobao.org; export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/; export PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors; export NODEJS_HOST=https://npm.taobao.org/mirrors/node/; fi; \
     \
     mkdir /data/ /data/logs/ /data/logs/nginx /data/www/ /data/tools /www/ \
     && mkdir /zbp-app-validator \
@@ -18,14 +18,13 @@ RUN export NODEJS_HOST=https://nodejs.org/dist/; if [ "x$location" = "xchina" ];
     && apt-get install -y --no-install-recommends fonts-noto fonts-noto-cjk fonts-noto-color-emoji \
 # nginx & PHP
     && LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php \
-    && if [ "x$location" = "xchina" ]; then echo "Changed Ubuntu source"; find /etc/apt/sources.list.d/ -type f -name "*.list" -exec  sed  -i.bak -r  's#deb(-src)?\s*http(s)?://ppa.launchpad.net#deb\1 https://launchpad.proxy.ustclug.org#ig' {} \; ;fi \
     && apt-get update \
-    && apt-get -y install nginx php8.0-fpm php8.0-gd php8.0-curl php8.0-mysql php8.0-cli php8.0-xml php8.0-json php8.0-mbstring php8.0-cli php8.0-dev php8.0-sqlite3 php8.0-zip php-pear \
+    && apt-get -y install nginx php8.0-fpm php8.0-gd php8.0-curl php8.0-mysql php8.0-cli php8.0-xml php8.0-mbstring php8.0-cli php8.0-dev php8.0-sqlite3 php8.0-zip php-pear \
     && pecl install uopz \
     && rm -rf /etc/nginx/sites-enabled/default \
-    && curl https://getcomposer.org/installer | php -- --filename=composer \
-    && chmod a+x composer \
-    && mv composer /usr/local/bin/composer \
+    && wget https://mirrors.tencent.com/composer/composer.phar \
+    && mv composer.phar /usr/local/bin/composer \
+    && chmod a+x /usr/local/bin/composer \
     && (echo extension=uopz.so > /etc/php/8.0/mods-available/uopz.ini) \
     && (echo extension=uopz.so > /etc/php/8.0/fpm/conf.d/uopz.ini) \
     && (echo extension=uopz.so > /etc/php/8.0/cli/conf.d/uopz.ini) \
@@ -42,7 +41,7 @@ RUN export NODEJS_HOST=https://nodejs.org/dist/; if [ "x$location" = "xchina" ];
     && bash -c "debconf-set-selections <<< 'mysql-server mysql-server/root_password password rootpassword'" \
     && bash -c "debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password rootpassword'" \
     && apt-get -y install mysql-server \
-    && mkdir /var/run/mysqld \
+    && mkdir -p /var/run/mysqld \
     && chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
 # Clean rubbish
     && apt-get -y remove php8.0-dev php-pear \
