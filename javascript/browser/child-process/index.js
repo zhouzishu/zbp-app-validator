@@ -43,7 +43,8 @@ async function runBrowser () {
 
   const browser = await puppeteer.launch({
     defaultViewport: viewport,
-    // headless: false
+ignoreHTTPSErrors: true
+	  // headless: false
   })
   const page = await browser.newPage()
   if (userAgent) {
